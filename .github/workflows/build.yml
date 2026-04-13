@@ -8,13 +8,11 @@ on:
     paths:
       - 'cli.py'
       - 'cli.spec'
+      - 'cli/**'
       - 'src/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [main]
-    paths:
-      - 'cli.py'
-      - 'cli.spec'
-      - 'src/**'
 
 jobs:
   build-cli:
