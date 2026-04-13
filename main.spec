@@ -1,11 +1,19 @@
 # -*- mode: python ; coding: utf-8 -*-
+import sys
 from pathlib import Path
+
+# 确保 __file__ 可用
+if getattr(sys, 'frozen', False):
+    # PyInstaller 打包环境
+    base_path = Path(sys._MEIPASS)
+else:
+    base_path = Path(__file__).parent.resolve()
 
 block_cipher = None
 
 a = Analysis(
     ['gui/main.py'],
-    pathex=[Path(__file__).parent.resolve()],
+    pathex=[base_path],
     binaries=[],
     datas=[
         # 包含 src 目录
