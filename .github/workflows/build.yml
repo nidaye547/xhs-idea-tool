@@ -127,23 +127,30 @@ jobs:
         run: |
           pyinstaller main.spec
 
-      - name: Prepare artifact
-        id: prepare
+      - name: Prepare artifact (Windows)
+        if: matrix.platform == 'windows-latest'
+        shell: bash
         run: |
-          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
-            echo "dir=dist" >> $GITHUB_OUTPUT
-            echo "file=xhs_idea_tool.exe" >> $GITHUB_OUTPUT
-          elif [ "${{ matrix.platform }}" == "macos-latest" ]; then
-            cd dist
-            mkdir -p xhs_idea_tool.app/Contents/MacOS
-            mv xhs_idea_tool xhs_idea_tool.app/Contents/MacOS/
-            cd ..
-            echo "dir=dist" >> $GITHUB_OUTPUT
-            echo "file=xhs_idea_tool.app" >> $GITHUB_OUTPUT
-          else
-            echo "dir=dist" >> $GITHUB_OUTPUT
-            echo "file=xhs_idea_tool" >> $GITHUB_OUTPUT
-          fi
+          echo "dir=dist" >> $GITHUB_OUTPUT
+          echo "file=xhs_idea_tool.exe" >> $GITHUB_OUTPUT
+
+      - name: Prepare artifact (macOS)
+        if: matrix.platform == 'macos-latest'
+        shell: bash
+        run: |
+          cd dist
+          mkdir -p xhs_idea_tool.app/Contents/MacOS
+          mv xhs_idea_tool xhs_idea_tool.app/Contents/MacOS/
+          cd ..
+          echo "dir=dist" >> $GITHUB_OUTPUT
+          echo "file=xhs_idea_tool.app" >> $GITHUB_OUTPUT
+
+      - name: Prepare artifact (Linux)
+        if: matrix.platform == 'ubuntu-latest'
+        shell: bash
+        run: |
+          echo "dir=dist" >> $GITHUB_OUTPUT
+          echo "file=xhs_idea_tool" >> $GITHUB_OUTPUT
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
