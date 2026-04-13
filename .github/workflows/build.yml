@@ -113,17 +113,17 @@ jobs:
       - name: Build with PyInstaller (Windows)
         if: matrix.platform == 'windows-latest'
         run: |
-          pyinstaller --onefile --name xhs_idea_tool --add-data "src;src" --add-data "gui;gui" main.spec
+          pyinstaller main.spec
 
       - name: Build with PyInstaller (macOS)
         if: matrix.platform == 'macos-latest'
         run: |
-          pyinstaller --onefile --name xhs_idea_tool --add-data "src:src" --add-data "gui:gui" main.spec
+          pyinstaller main.spec
 
       - name: Build with PyInstaller (Linux)
         if: matrix.platform == 'ubuntu-latest'
         run: |
-          pyinstaller --onefile --name xhs_idea_tool --add-data "src:src" --add-data "gui:gui" main.spec
+          pyinstaller main.spec
 
       - name: Prepare artifact
         id: prepare
