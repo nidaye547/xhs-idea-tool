@@ -8,8 +8,10 @@ on:
     paths:
       - 'cli.py'
       - 'cli.spec'
+      - 'main.spec'
       - 'cli/**'
       - 'src/**'
+      - 'gui/**'
       - '.github/workflows/**'
   pull_request:
     branches: [main]
