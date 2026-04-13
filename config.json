@@ -1,0 +1,9 @@
+{
+  "api_key": "sk-cp-GyL2R91WmwB6Hi_ttXXkXwAg2kjtReBDUOj4lFAz_0E5dd4boIIbv7by6uCtHVbqK1IQ_Fzkt1WmUp0XaKBIjkJXuIK9fCNSsQoXgSDsK4fEOABo3hZk9kM",
+  "model": "MiniMax-M2.7-highspeed",
+  "base_url": "https://api.minimaxi.com/v1",
+  "proxy": "",
+  "use_proxy": false,
+  "headless": true,
+  "cookie": "abRequestId=a0b97627-cc13-5c76-904e-b9f54fe94c5b; a1=19d202b4c104bczb86wvr5rwrqm437mkfekdh1l9f30000315476; webId=91c4803b268f4ecdf1b8320c4412082c; gid=yjfJ8JD2YdiqyjfJ8JD4Sdy1y84DSuDYKEhFTji2FEFA6fq84qW6Tx888qy24WK8dW4dj2f4; web_session=040069b40396853773f0e4d2f73b4bdb1cf13c; id_token=VjEAANKyfuKz4gEdlcxPW49SW7k9/CTWtbwVcvXi5MzenAtfJpQgLRoPxIU6aBQfoUZTWy7kUw1lVB0ayUdrJYP0x0/cIwgJE6oUozioki8pZhkV8j4a/lgvFIrvnqSD7c+VWLZ7; ets=1775546573225; xsecappid=xhs-pc-web; webBuild=6.5.1; loadts=1776065007348; acw_tc=0a4ad40f17760650077752801e6af69ba91e9ad0434e37284db53c8e522c47; websectiga=f47eda31ec99545da40c2f731f0630efd2b0959e1dd10d5fedac3dce0bd1e04d; sec_poison_id=080e1963-dbeb-4580-9a30-f1e3339cea18"
+}

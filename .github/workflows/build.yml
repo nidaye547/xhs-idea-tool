@@ -1,0 +1,115 @@
+name: Build Desktop App
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            artifact: xhs_idea_tool.exe
+            ext: .exe
+          - platform: macos-latest
+            artifact: xhs_idea_tool.app
+            ext: .app
+          - platform: ubuntu-latest
+            artifact: xhs_idea_tool
+            ext: ''
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Install Playwright browsers
+        run: |
+          playwright install chromium
+          playwright install firefox
+          playwright install webkit
+
+      - name: Build with PyInstaller (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: |
+          pyinstaller --onefile --name xhs_idea_tool --add-data "src;src" --add-data "gui;gui" main.spec
+
+      - name: Build with PyInstaller (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          pyinstaller --onefile --name xhs_idea_tool --add-data "src:src" --add-data "gui:gui" main.spec
+
+      - name: Build with PyInstaller (Linux)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          pyinstaller --onefile --name xhs_idea_tool --add-data "src:src" --add-data "gui:gui" main.spec
+
+      - name: Prepare artifact
+        id: prepare
+        run: |
+          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
+            echo "dir=dist" >> $GITHUB_OUTPUT
+            echo "file=xhs_idea_tool.exe" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.platform }}" == "macos-latest" ]; then
+            cd dist
+            mkdir -p xhs_idea_tool.app/Contents/MacOS
+            mv xhs_idea_tool xhs_idea_tool.app/Contents/MacOS/
+            cd ..
+            echo "dir=dist" >> $GITHUB_OUTPUT
+            echo "file=xhs_idea_tool.app" >> $GITHUB_OUTPUT
+          else
+            echo "dir=dist" >> $GITHUB_OUTPUT
+            echo "file=xhs_idea_tool" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-artifact
+          path: ${{ steps.prepare.outputs.dir }}/${{ steps.prepare.outputs.file }}
+          retention-days: 30
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*.exe
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

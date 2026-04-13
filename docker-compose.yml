@@ -1,0 +1,28 @@
+services:
+  crawler:
+    build: .
+    volumes:
+      - ./keywords.txt:/app/keywords.txt:ro
+      - ./data:/app/data
+      - ./output:/app/output
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
+      - AI_MODEL=${AI_MODEL}
+      - AI_PROVIDER=${AI_PROVIDER}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - XHS_COOKIE=${XHS_COOKIE}
+      - CRAWL_INTERVAL_HOURS=6
+      - CRAWL_HOUR=2
+      - CRAWL_MINUTE=0
+      - HEADLESS=true
+      - COMMENT_SCROLL_PAUSE=1.5
+      - MAX_NOTES_PER_KEYWORD=10
+      - MAX_CONCURRENT_PAGES=5
+      - BATCH_DELAY=30
+    restart: unless-stopped
+    shm_size: 2gb
+    command: python src/scheduler.py
