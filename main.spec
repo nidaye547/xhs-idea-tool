@@ -1,6 +1,4 @@
 # -*- mode: python ; coding: utf-8 -*-
-import sys
-from pathlib import Path
 
 block_cipher = None
 
@@ -9,17 +7,14 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        # 包含 src 目录
         ('src', 'src'),
     ],
     hiddenimports=[
-        # 爬虫依赖
         'playwright',
         'httpx',
         'openai',
         'anthropic',
         'browserforge',
-        # PyQt5
         'PyQt5',
         'PyQt5.QtCore',
         'PyQt5.QtGui',
@@ -41,29 +36,20 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     [],
-    exclude_binaries=True,
     name='xhs_idea_tool',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
-    console=False,  # 不显示控制台窗口
+    upx=False,
+    runtime_tmpdir=None,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=None,
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='xhs_idea_tool',
 )
