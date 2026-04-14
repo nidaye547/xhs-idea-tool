@@ -65,11 +65,11 @@ jobs:
           pyinstaller cli.spec
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-cli
           path: dist/${{ matrix.artifact }}
-          retention-days: 30
+          retention-days: 1
 
   build-desktop:
     strategy:
@@ -154,11 +154,11 @@ jobs:
           echo "file=xhs_idea_tool" >> $GITHUB_OUTPUT
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-desktop
           path: ${{ steps.prepare.outputs.dir }}/${{ steps.prepare.outputs.file }}
-          retention-days: 30
+          retention-days: 1
 
   release:
     needs: [build-cli, build-desktop]
