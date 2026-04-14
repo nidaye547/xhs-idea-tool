@@ -122,42 +122,37 @@ jobs:
         if: matrix.platform == 'macos-latest'
         run: |
           pyinstaller main.spec
+          cd dist
+          mkdir -p xhs_idea_tool.app/Contents/MacOS
+          mv xhs_idea_tool xhs_idea_tool.app/Contents/MacOS/
 
       - name: Build with PyInstaller (Linux)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           pyinstaller main.spec
 
-      - name: Prepare artifact (Windows)
+      - name: Upload artifact (Windows)
         if: matrix.platform == 'windows-latest'
-        shell: bash
-        run: |
-          echo "dir=dist" >> $GITHUB_OUTPUT
-          echo "file=xhs_idea_tool.exe" >> $GITHUB_OUTPUT
-
-      - name: Prepare artifact (macOS)
-        if: matrix.platform == 'macos-latest'
-        shell: bash
-        run: |
-          cd dist
-          mkdir -p xhs_idea_tool.app/Contents/MacOS
-          mv xhs_idea_tool xhs_idea_tool.app/Contents/MacOS/
-          cd ..
-          echo "dir=dist" >> $GITHUB_OUTPUT
-          echo "file=xhs_idea_tool.app" >> $GITHUB_OUTPUT
-
-      - name: Prepare artifact (Linux)
-        if: matrix.platform == 'ubuntu-latest'
-        shell: bash
-        run: |
-          echo "dir=dist" >> $GITHUB_OUTPUT
-          echo "file=xhs_idea_tool" >> $GITHUB_OUTPUT
-
-      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}-desktop
-          path: ${{ steps.prepare.outputs.dir }}/${{ steps.prepare.outputs.file }}
+          name: windows-desktop
+          path: dist/xhs_idea_tool.exe
+          retention-days: 1
+
+      - name: Upload artifact (macOS)
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-desktop
+          path: dist/xhs_idea_tool.app
+          retention-days: 1
+
+      - name: Upload artifact (Linux)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-desktop
+          path: dist/xhs_idea_tool
           retention-days: 1
 
   release:
